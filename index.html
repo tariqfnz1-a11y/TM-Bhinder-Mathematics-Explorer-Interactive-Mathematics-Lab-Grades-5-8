@@ -3,53 +3,755 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Policies · TM Bhinder Number Explorer</title>
+<title>Number Explorer v1.1 · TM Bhinder Interactive Mathematics Lab (Grades 5–8)</title>
+<meta name="description" content="Free interactive number-sense lab for Grades 5–8 with grade and difficulty levels: fractions, decimals and percents, integers, ratios and proportion, multiplication and division. Designed with reference to the Ontario Mathematics Curriculum (2020). No accounts, no tracking.">
 <style>
-body{font-family:system-ui,Arial,sans-serif;color:#1a2333;background:#f4f7fb;line-height:1.6;margin:0}
-.wrap{max-width:820px;margin:0 auto;padding:24px 16px}
-h1{font-size:1.5rem}h2{margin-top:28px;border-top:1px solid #c9d4e2;padding-top:16px}
-a{color:#0b5cad}.card{background:#fff;border:1px solid #c9d4e2;border-radius:12px;padding:20px;margin:16px 0}
+:root{--ink:#1a2333;--mut:#44506a;--pri:#0b5cad;--pri-d:#084a8a;--ok:#116932;--bad:#b3261e;--line:#c9d4e2;--bg:#f4f7fb;--focus:#b45309;--blue:#2563eb;--orange:#b45309}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+body.projector{font-size:119%}
+body.demoing{padding-bottom:130px}
+.wrap{max-width:1060px;margin:0 auto;padding:0 16px}
+header.site{background:#fff;border-bottom:3px solid var(--pri);padding:18px 0 12px}
+.headrow{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-start}
+.brand{margin:0;font-weight:800;letter-spacing:.12em;color:var(--pri);font-size:.95rem}
+.brand span{letter-spacing:0;font-weight:600;color:var(--mut)}
+h1{margin:2px 0;font-size:1.6rem}
+.grade{font-size:.95rem;font-weight:600;color:var(--mut)}
+.tag{margin:2px 0 0;color:var(--mut);font-style:italic}
+.headctl{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.proj{font-weight:600;display:flex;gap:8px;align-items:center;min-height:24px}
+.proj input{width:20px;height:20px;accent-color:var(--pri)}
+a{color:var(--pri)}
+.hub{font-weight:600}
+.privacy{margin-top:10px;font-size:.9rem;color:var(--mut);background:#eef4fb;border-radius:8px;padding:6px 10px}
+.toolbar{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);padding:8px 0}
+.toolbar .wrap{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.toolbar label{font-weight:700;display:flex;gap:8px;align-items:center}
+.toolbar select{font:inherit;padding:8px 10px;border:1px solid #8b99ad;border-radius:8px}
+.toolbar .ann{font-size:.9rem;color:var(--mut)}
+nav{margin-top:14px}
+#tabs{display:flex;flex-wrap:wrap;gap:6px}
+[role=tab]{font:inherit;font-weight:600;padding:10px 14px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);cursor:pointer}
+[role=tab][aria-selected=true]{background:var(--pri);border-color:var(--pri);color:#fff}
+[role=tab]:hover{border-color:var(--pri)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;margin:14px 0 26px}
+h2{margin:0 0 4px;font-size:1.35rem}
+h3{margin:26px 0 8px;font-size:1.1rem;border-top:1px solid var(--line);padding-top:18px}
+h3 .n{display:inline-block;background:var(--pri);color:#fff;border-radius:999px;min-width:26px;height:26px;text-align:center;line-height:26px;font-size:.9rem;margin-right:8px}
+.chips span{display:inline-block;background:#fdf1e3;color:#7c3f04;border:1px solid #e5c9a8;border-radius:999px;padding:2px 10px;font-size:.85rem;margin:2px 6px 2px 0;font-weight:600}
+.objective{background:#eef4fb;border:1px solid #bcd3ea;border-radius:8px;padding:8px 12px;font-weight:600;margin:8px 0}
+.callout{background:#eef4fb;border-left:4px solid var(--pri);padding:10px 14px;border-radius:0 8px 8px 0;font-weight:600}
+.ctl{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin:10px 0}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:0}
+legend{font-weight:700;padding:0 6px}
+.sl{display:flex;align-items:center;gap:8px;font-weight:600;margin:6px 0}
+.sl input[type=range]{width:min(170px,100%);accent-color:var(--pri);height:24px}
+.sl .val{min-width:2ch;text-align:right;font-variant-numeric:tabular-nums}
+label.nl{display:flex;flex-direction:column;gap:4px;font-weight:600}
+input[type=number],input.ans,select{font:inherit;padding:9px 10px;border:1px solid #8b99ad;border-radius:8px;background:#fff;color:var(--ink)}
+input[type=number]{width:6.5rem}
+input.ans{width:min(320px,100%)}
+.btn{font:inherit;font-weight:700;min-height:44px;padding:9px 18px;border-radius:9px;border:1px solid var(--pri);background:var(--pri);color:#fff;cursor:pointer}
+.btn:hover{background:var(--pri-d)}
+.btn.sec{background:#fff;color:var(--pri)}
+.btn.sec:hover{background:#eef4fb}
+.btn.mini{min-height:36px;padding:5px 12px;font-weight:600}
+.btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;align-items:center}
+.visual{border:1px dashed #b6c3d6;border-radius:12px;padding:12px;margin-top:12px;background:#fff}
+svg{display:block;max-width:100%;height:auto}
+.caption{margin:8px 0 0;color:#33415e}
+.stat{display:inline-block;background:#f2f6fb;border:1px solid var(--line);border-radius:8px;padding:8px 14px;margin:6px 8px 0 0;font-weight:700;font-size:1.05rem}
+.verdict{font-weight:700;margin:10px 0 0}
+.qprompt{font-size:1.15rem;font-weight:700;margin:8px 0}
+.progress{color:var(--mut);font-weight:600;margin:4px 0}
+.feedback{font-weight:600;padding:10px 14px;border-radius:9px;margin-top:12px}
+.feedback:empty{display:none}
+.feedback.ok{background:#e7f4ec;color:var(--ok);border:1px solid var(--ok)}
+.feedback.no{background:#fdecea;color:var(--bad);border:1px solid var(--bad)}
+.choices{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.choices button{font:inherit;font-weight:600;text-align:left;min-height:46px;padding:9px 14px;border:1px solid #8b99ad;border-radius:9px;background:#fff;cursor:pointer;color:var(--ink)}
+.choices button:hover:not(:disabled){border-color:var(--pri);background:#eef4fb}
+.choices button.correct{background:#e7f4ec;border-color:var(--ok)}
+.choices button.wrong{background:#fdecea;border-color:var(--bad)}
+.choices button:disabled{cursor:default}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:10px 0;background:#fbfcfe}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f2f6fb}
+textarea{width:100%;font:inherit;padding:10px;border:1px solid #8b99ad;border-radius:9px}
+.muted{color:var(--mut);font-size:.92rem}
+footer.site{border-top:1px solid var(--line);background:#fff;padding:18px 0 30px;margin-top:20px;color:var(--mut);font-size:.92rem}
+.skip{position:absolute;left:-9999px;top:0}
+.skip:focus{left:10px;top:10px;background:#fff;padding:10px 14px;border:2px solid var(--pri);z-index:99;border-radius:8px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+#demobar{position:fixed;left:0;right:0;bottom:0;background:#1a2333;color:#fff;padding:12px 16px;z-index:50;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center}
+#demobar[hidden]{display:none}
+#demobar .dt{max-width:640px;font-weight:600}
+#demobar .btn{min-height:40px}
+#worksheet{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:24px;margin:18px auto}
+.wq{margin:16px 0;break-inside:avoid}
+.wqp{font-weight:600;margin:0 0 4px}
+.wans{margin:0;color:#000}
+.wspace{height:44px;border-bottom:1px solid #999;margin:6px 0 0}
+.answerkey{margin-top:24px;border-top:2px solid var(--ink);padding-top:12px}
+.wfoot{font-size:.85rem;color:#333;margin-top:18px}
+@media (max-width:640px){h1{font-size:1.3rem}.headctl{align-items:flex-start}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{body>*:not(#worksheet){display:none!important}#worksheet{display:block!important;border:none;max-width:100%;padding:0;margin:0}.answerkey{break-before:page}body{background:#fff}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<p><a href="index.html">← Back to Number Explorer</a></p>
-<h1>TM Bhinder · Privacy, Accessibility &amp; Terms</h1>
-
-<div class="card" id="privacy">
-<h2>Privacy</h2>
-<p>This learning application does not request student accounts or intentionally
-collect, transmit or retain answers entered into its activities. Scores and
-reflections exist only in the page's memory and disappear when the tab is closed
-or reloaded. There are no timers, analytics, cookies or advertising.</p>
-<p>The site is hosted on <strong>GitHub Pages</strong>, which may process technical
-connection information (such as IP address and request logs) under its own privacy
-policies. This is infrastructure-level processing by the host, not collection by
-the application.</p>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="site">
+  <div class="wrap headrow">
+    <div>
+      <p class="brand">TM BHINDER <span>· Interactive Mathematics Lab</span></p>
+      <h1>Number Explorer <span class="grade">Grades 5–8 · Module 1 · v1.1</span></h1>
+      <p class="tag">Explore. Visualize. Understand.</p>
+    </div>
+    <div class="headctl">
+      <label class="proj"><input type="checkbox" id="projector"> Projector mode (larger text)</label>
+      <a class="hub" href="https://tariqfnz1-a11y.github.io/maths-lab-hub/">← Back to Maths Lab Hub</a>
+    </div>
+  </div>
+  <div class="wrap"><p class="privacy">This learning application does not request student accounts or intentionally collect, transmit or retain answers entered into its activities. It is hosted on GitHub Pages, which may process technical connection information under its own policies. No timers.</p></div>
+</header>
+<div class="toolbar no-print">
+  <div class="wrap">
+    <label>Grade <select id="sel-grade"><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option></select></label>
+    <label>Level <select id="sel-level"><option value="1">Beginner</option><option value="2" selected>Standard</option><option value="3">Challenge</option></select></label>
+    <span class="ann" id="gl-ann" role="status">Grade 5 · Standard. Objectives and practice questions match this selection.</span>
+  </div>
 </div>
-
-<div class="card" id="accessibility">
-<h2>Accessibility</h2>
-<p>Number Explorer is built toward <strong>WCAG 2.2 AA</strong>: keyboard-operable
-tabs and sliders, visible focus indicators, live-region feedback, text descriptions
-for visual models, sufficient colour contrast, and no time limits.</p>
-<p><strong>Status: not yet certified.</strong> Keyboard and automated checks are
-complete; full screen-reader testing (e.g., NVDA), 200%/400% zoom and mobile testing
-are pending. Please report any barrier via the
-<a href="https://tariqfnz1-a11y.github.io/maths-lab-hub/">Maths Lab Hub</a>.</p>
+<nav class="wrap" aria-label="Number Explorer topics"><div id="tabs" role="tablist" aria-label="Topics"></div></nav>
+<main id="main" class="wrap"></main>
+<section id="worksheet" class="wrap" hidden aria-label="Printable worksheet"></section>
+<div id="demobar" role="region" aria-label="Guided demonstration" hidden>
+  <span class="dt" id="demo-text" aria-live="polite"></span>
+  <button type="button" class="btn sec mini" id="demo-back">Back</button>
+  <button type="button" class="btn mini" id="demo-next">Next</button>
+  <button type="button" class="btn sec mini" id="demo-exit">Exit demo</button>
 </div>
-
-<div class="card" id="terms">
-<h2>Terms &amp; licence</h2>
-<p>Free demonstration version for classroom evaluation, under the repository
-<code>LICENSE</code>. © 2026 TM Bhinder. All rights reserved.</p>
-<p>Designed with reference to the Ontario Mathematics Curriculum (2020). This is an
-independent resource and is <strong>not approved or endorsed</strong> by the Ontario
-Ministry of Education, Peel District School Board, or any school. Curriculum
-expectation codes are referenced for alignment; descriptions are paraphrases.</p>
-<p>Contact TM Bhinder via the Maths Lab Hub for school licensing, teacher packages,
-professional development and custom development.</p>
-</div>
-</div>
+<footer class="site">
+  <div class="wrap">
+    <p><strong>TM Bhinder · Interactive Mathematics Lab</strong> — Module 1: Number Explorer (v1.1)</p>
+    <p>Designed with reference to the Ontario Mathematics Curriculum (2020). Independent resource — not approved or endorsed by the Ontario Ministry of Education, Peel District School Board, or any school.</p>
+    <p>© 2026 TM Bhinder · <a href="https://tariqfnz1-a11y.github.io/maths-lab-hub/">Maths Lab Hub</a> · Free demonstration version for classroom evaluation.</p>
+  </div>
+</footer>
+<noscript><p class="wrap">Number Explorer needs JavaScript to run its interactive models. Please enable JavaScript, or contact TM Bhinder for printable resources.</p></noscript>
+<script>
+"use strict";
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){const t=a%b;a=b;b=t;}return a||1;}
+function lcm(a,b){return a/gcd(a,b)*b;}
+function simp(n,d){const g=gcd(n,d);return [n/g,d/g];}
+function ri(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+function pick(arr){return arr[ri(0,arr.length-1)];}
+function fmtF(n,d){const s=simp(n,d);if(s[0]===0)return "0";if(s[1]===1)return String(s[0]);return s[0]+"/"+s[1];}
+function fmtN(v){return Number.isInteger(v)?String(v):String(Math.round(v*1000)/1000);}
+function norm(s){return String(s).trim().replace(/\u2212/g,"-").replace(/\s+/g,"");}
+function parseNum(s){s=norm(s);return /^-?(\d+(\.\d+)?|\.\d+)$/.test(s)?parseFloat(s):null;}
+function parseFrac(s){s=norm(s);let m=s.match(/^(-?\d+)\/(\d+)$/);if(m)return{n:+m[1],d:+m[2]};m=s.match(/^(-?\d+)$/);if(m)return{n:+m[1],d:1};return null;}
+function parseRatio(s){const m=norm(s).match(/^(\d+):(\d+)$/);return m?{a:+m[1],b:+m[2]}:null;}
+function near(v,t){return v!==null&&Math.abs(v-t)<1e-6;}
+function chkNum(t){return function(s){return near(parseNum(s),t);};}
+function chkMoney(t){return function(s){return near(parseNum(norm(s).replace(/^\$/,"")),t);};}
+function chkPct(t){return function(s){return near(parseNum(norm(s).replace(/%$/,"")),t);};}
+function chkSimpFrac(n,d){return function(s){const f=parseFrac(s);return !!f&&f.d>0&&f.n>=0&&f.n*d===f.d*n&&gcd(f.n,f.d)===1;};}
+function chkFracVal(n,d){const t=n/d;return function(s){const f=parseFrac(s);if(f&&f.d>0&&near(f.n/f.d,t))return true;return near(parseNum(s),t);};}
+function chkSimpRatio(a,b){return function(s){const r=parseRatio(s);return !!r&&r.b>0&&r.a*b===r.b*a&&gcd(r.a,r.b)===1;};}
+function par(v){return v<0?"("+v+")":String(v);}
+function Q(p,d,e,h,c){return{prompt:p,kind:"input",display:d,explain:e,hint:h,check:c};}
+function C(p,ch,co,e,h){return{prompt:p,kind:"choice",choices:ch,correct:co,display:ch[co],explain:e,hint:h};}
+function explainInt(a,op,b,res){
+ if(op==="+"){return b===0?"Adding 0 leaves the number unchanged.":"Start at "+a+". Adding "+par(b)+" moves "+Math.abs(b)+(Math.abs(b)===1?" step ":" steps ")+(b>0?"right":"left")+", landing on "+fmtN(res)+".";}
+ if(op==="−"){return b===0?"Subtracting 0 leaves the number unchanged.":"Start at "+a+". Subtracting "+par(b)+" moves "+Math.abs(b)+(Math.abs(b)===1?" step ":" steps ")+(b>0?"left":"right")+" — subtracting a negative is like adding its opposite. You land on "+fmtN(res)+".";}
+ if(op==="÷"){return b===0?"Division by 0 is undefined.":"Think multiplication: "+par(b)+" × what = "+par(a)+"? Since "+par(b)+" × "+par(res)+" = "+par(a)+", the answer is "+fmtN(res)+". Same signs give a positive; different signs give a negative.";}
+ if(a===0||b===0)return "Any number multiplied by 0 is 0.";
+ return "Multiply the magnitudes: "+Math.abs(a)+" × "+Math.abs(b)+" = "+Math.abs(res)+". The signs are "+((a<0)===(b<0)?"the same, so the product is positive":"different, so the product is negative")+". Result: "+fmtN(res)+".";
+}
+function fEq(g,l){const maxD=g>=7?60:12;
+ const dp=(l===1?[2,3,4,5,6]:l===2?[2,3,4,5,6,8]:[2,3,4,5,6,8,10,12]).filter(function(d){return d*2<=maxD;});
+ const d=pick(dp),n=ri(1,d-1),k=ri(2,Math.floor(maxD/d)),N=n*k,D=d*k;
+ return Q("Equivalent fractions: "+n+"/"+d+" = ?/"+D+". What is the missing numerator?",String(N),
+  "Multiply top and bottom by "+k+": "+n+"×"+k+"="+N+", "+d+"×"+k+"="+D+". Same amount, smaller pieces.",
+  "Ask: "+d+" × what = "+D+"? Multiply the numerator by that same number.",chkNum(N));}
+function fCmp(g,l){const dp=l===1?[2,3,4,6]:l===2?[2,3,4,5,6,8]:[2,3,4,5,6,8,10,12];
+ const neg=g>=7&&l===3,d1=pick(dp),d2=pick(dp);
+ let n1=ri(1,d1-1),n2=ri(1,d2-1);
+ if(neg){if(Math.random()<.5)n1=-n1;if(Math.random()<.5)n2=-n2;}
+ const L=lcm(d1,d2),a=n1*(L/d1),b=n2*(L/d2),co=a>b?0:(b>a?1:2);
+ const f1=n1+"/"+d1,f2=n2+"/"+d2,ch=[f1,f2,"They are equal"];
+ const v=a===b?"Both equal "+a+"/"+L+".":(a>b?a+"/"+L+" > "+b+"/"+L+".":b+"/"+L+" > "+a+"/"+L+".");
+ return C("Which is greater: "+f1+" or "+f2+"?",ch,co,"Common denominator "+L+": "+f1+"="+a+"/"+L+", "+f2+"="+b+"/"+L+". "+v,
+  "Rewrite both with the same denominator, then compare numerators. Any negative is less than any positive.");}
+function fSimp(g,l){let n,d;do{d=ri(2,l===1?6:l===2?9:12);n=ri(1,d-1);}while(gcd(n,d)!==1);
+ const k=ri(2,l===1?3:l===2?4:6),N=n*k,D=d*k;
+ return Q("Write "+N+"/"+D+" in lowest terms.",n+"/"+d,"GCF of "+N+" and "+D+" is "+k+". Divide both by "+k+" → "+n+"/"+d+".",
+  "Find the greatest common factor of top and bottom, then divide both by it.",chkSimpFrac(n,d));}
+function fLike(g,l,sub){const d=ri(2,l===1?6:12);let a,b;
+ if(sub){a=ri(2,d);b=ri(1,a-1);}else{a=ri(1,d-1);b=l===1?ri(1,d-a):ri(1,d-1);}
+ const num=sub?a-b:a+b,op=sub?"−":"+";
+ return Q(a+"/"+d+" "+op+" "+b+"/"+d+" = ?",fmtF(num,d),
+  "Same denominator: "+(sub?"subtract":"add")+" numerators: "+a+" "+op+" "+b+" = "+num+". Result "+fmtF(num,d)+".",
+  "The denominators already match, so just "+(sub?"subtract":"add")+" the numerators.",chkFracVal(num,d));}
+function fUnlike(g,l,sub){const dp=l===1?[2,3,4]:l===2?[2,3,4,5,6]:[3,4,5,6,8];
+ let d1=pick(dp),d2=pick(dp);while(d2===d1)d2=pick(dp);
+ let a=ri(1,d1-1),b=ri(1,d2-1);const L=lcm(d1,d2);let A=a*(L/d1),B=b*(L/d2);
+ if(sub&&A<B){const t=a;a=b;b=t;const t2=d1;d1=d2;d2=t2;A=a*(L/d1);B=b*(L/d2);}
+ const num=sub?A-B:A+B,op=sub?"−":"+";
+ return Q(a+"/"+d1+" "+op+" "+b+"/"+d2+" = ?",fmtF(num,L),
+  "Common denominator "+L+": "+a+"/"+d1+"="+A+"/"+L+", "+b+"/"+d2+"="+B+"/"+L+". "+A+" "+op+" "+B+" = "+num+". Answer "+fmtF(num,L)+".",
+  "Make equivalent fractions with a common denominator first, then "+(sub?"subtract":"add")+" the numerators.",chkFracVal(num,L));}
+function fOf(g,l){const d=pick([2,3,4,5,6,8,10]),n=ri(1,d-1),base=d*ri(2,l===1?6:12),ans=base*n/d;
+ return Q("What is "+n+"/"+d+" of "+base+"?",String(ans),base+" ÷ "+d+" = "+(base/d)+"; × "+n+" = "+ans+".",
+  "Divide the whole by the denominator to find one part, then multiply by the numerator.",chkNum(ans));}
+function genFractions(g,l){
+ const like=function(s){return function(){return fLike(g,l,s);};},unlike=function(s){return function(){return fUnlike(g,l,s);};};
+ let pool;
+ if(g===5)pool=l===1?[fEq,fCmp]:l===2?[fEq,fCmp,like(false)]:[fCmp,like(false),like(true)];
+ else if(g===6)pool=l===1?[fEq,like(false)]:l===2?[unlike(false),unlike(true),fCmp]:[unlike(false),unlike(true),fSimp];
+ else if(g===7)pool=l===1?[fSimp,like(false)]:l===2?[fSimp,unlike(false),fCmp]:[fSimp,unlike(true),fCmp];
+ else pool=l===1?[fSimp,fOf]:l===2?[unlike(false),fOf,fSimp]:[unlike(true),fOf,fCmp];
+ return pick(pool)(g,l);}
+function p2d(g,l){const p=(g===8&&l===3)?pick([125,150,0.5,2.5]):pick([5,10,15,20,25,30,40,45,50,60,75,80,90]),dec=p/100;
+ return Q("Write "+p+"% as a decimal.",String(dec),"Per cent = out of 100. "+p+"% = "+p+"/100 = "+dec+". Move the decimal point two places left.",
+  "Divide by 100: shift the decimal point two places to the left.",chkNum(dec));}
+function d2p(g,l){const p=(g===8&&l===3)?pick([125,150,0.5,2.5]):pick([5,8,10,20,25,35,40,50,60,75,90,99]),dec=p/100;
+ return Q("Write "+dec+" as a percent.",p+"%",dec+" = "+p+"/100 = "+p+"%. Move the decimal point two places right.",
+  "Multiply by 100: shift the decimal point two places to the right.",chkPct(p));}
+function pOf(g,l){const ps=g===6?[1,5,10,15,25,50]:g===5?[10,20,25,50,75]:[5,10,15,20,25,30,40,50,60,75];
+ const p=pick(ps),step={1:100,5:20,10:10,15:20,20:5,25:4,30:10,40:5,50:2,60:5,75:4}[p];
+ const base=step*ri(2,l===1?6:l===2?12:20),ans=base*p/100;
+ return Q("What is "+p+"% of "+base+"?",String(ans),p+"% of "+base+" = ("+p+"/100)×"+base+" = "+ans+". Find 10%, 25% or 50% first, then scale.",
+  "Start from a friendly percent: 10% (÷10), 25% (÷4) or 50% (÷2), then build up.",chkNum(ans));}
+function frac2p(g,l){const f=pick([[1,2],[1,4],[3,4],[1,5],[1,10],[3,10],[7,10],[9,10],[1,20],[3,20]]),p=f[0]*100/f[1];
+ return Q("Write "+f[0]+"/"+f[1]+" as a percent.",p+"%",f[0]+"/"+f[1]+" = "+(f[0]/f[1])+" = "+p+"%. Scale to a denominator of 100.",
+  "Make an equivalent fraction out of 100, or divide then multiply by 100.",chkPct(p));}
+function incrDecr(g,l){const p=pick([5,10,15,20,25,50]),inc=Math.random()<.5,step={5:20,10:10,15:20,20:5,25:4,50:2}[p];
+ const base=step*ri(2,l===3?20:12),change=base*p/100,ans=inc?base+change:base-change;
+ return Q((inc?"Increase ":"Decrease ")+base+" by "+p+"%.",String(ans),p+"% of "+base+" = "+change+". "+(inc?base+" + "+change:base+" − "+change)+" = "+ans+".",
+  "Find the percent of the number first, then "+(inc?"add it to":"subtract it from")+" the original.",chkNum(ans));}
+function genPercents(g,l){let pool;
+ if(g===5)pool=[p2d,d2p,pOf,frac2p];
+ else if(g===6)pool=l===1?[pOf,p2d]:[pOf,p2d,d2p];
+ else if(g===7)pool=l===1?[frac2p,d2p,pOf]:[frac2p,pOf,incrDecr];
+ else pool=l===1?[pOf,frac2p]:l===2?[pOf,incrDecr,d2p]:[pOf,incrDecr,p2d];
+ return pick(pool)(g,l);}
+function iCmp(g,l){const r=l===1?10:l===2?20:50,a=ri(-r,r),b=ri(-r,r),co=a>b?0:(b>a?1:2);
+ return C("Which is greater: "+a+" or "+b+"?",[String(a),String(b),"They are equal"],co,
+  "On a number line, numbers to the right are greater. "+(a===b?"They are the same point.":(a>b?a:b)+" is farther right."),
+  "Picture a number line: farther right is greater. Any positive is greater than any negative.");}
+function iAddSub(g,l){const r=g===5?(l===1?5:10):(l===1?6:l===2?12:20);
+ let a=g===5?ri(0,r):ri(-r,r),b=g===5?ri(0,r):ri(-r,r),op=pick(["+","−"]);
+ if(g===5&&l===1&&op==="−"&&b>a){const t=a;a=b;b=t;}
+ const res=op==="+"?a+b:a-b;
+ return Q("Calculate: "+par(a)+" "+op+" "+par(b),String(res),explainInt(a,op,b,res),
+  "Start at "+a+". "+(op==="+"?"Adding":"Subtracting")+" "+par(b)+" moves "+(op==="+"?(b>=0?"right":"left"):(b>=0?"left":"right"))+" on the number line.",chkNum(res));}
+function iMultDiv(g,l){const r=l===1?6:12,div=l===3&&Math.random()<.5;let a,b,res,op;
+ if(div){b=pick([-1,1])*ri(2,r);res=pick([-1,1])*ri(2,r);a=b*res;op="÷";}
+ else{a=ri(-r,r);b=ri(-r,r);res=a*b;op="×";}
+ return Q("Calculate: "+par(a)+" "+op+" "+par(b),String(res),explainInt(a,op,b,res),
+  div?"Think: "+par(b)+" × what = "+par(a)+"? Use the sign rules.":"Multiply the magnitudes, then decide the sign: same signs → positive, different signs → negative.",chkNum(res));}
+function genIntegers(g,l){
+ if(g===5)return iAddSub(g,l);
+ if(g===6)return pick(l===1?[iCmp,iAddSub]:[iCmp,iAddSub,iAddSub])(g,l);
+ if(g===7)return iAddSub(g,l);
+ return pick(l===1?[iAddSub]:l===2?[iMultDiv,iAddSub]:[iMultDiv])(g,l);}
+function rEq(g,l){const a=ri(1,l===1?4:6),b=ri(1,l===1?4:6),k=ri(2,l===1?4:l===2?6:9),miss=Math.random()<.5;
+ const prompt=miss?("Complete: "+a+" : "+b+" = ? : "+(b*k)):("Complete: "+a+" : "+b+" = "+(a*k)+" : ?"),ans=miss?a*k:b*k;
+ return Q(prompt,String(ans),"Both parts scale by "+k+": "+a+"×"+k+"="+(a*k)+", "+b+"×"+k+"="+(b*k)+".",
+  "Find the scale factor from the known pair, then apply it to the other part.",chkNum(ans));}
+function rSimp(g,l){let a,b;do{a=ri(1,6);b=ri(1,6);}while(gcd(a,b)!==1||a===b);
+ const k=ri(2,l===1?4:6),A=a*k,B=b*k;
+ return Q("Write "+A+" : "+B+" in simplest form (a : b).",a+" : "+b,"Divide both parts by their GCF, "+k+": "+A+"÷"+k+"="+a+", "+B+"÷"+k+"="+b+".",
+  "Divide both parts by the same number — their greatest common factor.",chkSimpRatio(a,b));}
+function rScale(g,l){const a=ri(1,5),b=ri(1,5),k=ri(2,l===1?4:6),given=a*k,ans=b*k;
+ const c=pick([["red","blue"],["cups of flour","cups of milk"],["boys","girls"]]);
+ return Q("The ratio of "+c[0]+" to "+c[1]+" is "+a+" : "+b+". There are "+given+" "+c[0]+". How many "+c[1]+"?",String(ans),
+  "Scale factor "+k+" (from "+a+" to "+given+"). "+b+" × "+k+" = "+ans+".",
+  "How many times bigger is the known amount? Multiply the other part by that same factor.",chkNum(ans));}
+function rProp(g,l){const a=ri(1,6),b=ri(1,6),k=ri(2,5);let c=a*k,d=b*k;
+ if(Math.random()<.5){c+=1;if(a*d===b*c)c+=1;}
+ const ok=a*d===b*c;
+ return C("Do "+a+" : "+b+" and "+c+" : "+d+" form a proportion?",["Yes","No"],ok?0:1,
+  "Cross products: "+a+"×"+d+"="+(a*d)+" and "+b+"×"+c+"="+(b*c)+". "+(ok?"Equal → equivalent.":"Not equal → not equivalent."),
+  "Multiply across the diagonals (cross products). If they match, the ratios are equivalent.");}
+function rUnit(g,l){const n=ri(2,l===1?5:9),unit=ri(2,l===1?6:12),total=n*unit,item=pick(["notebooks","pens","apples","tickets"]);
+ const q=Math.random()<.5?1:n+ri(1,4),ans=unit*q;
+ return Q("If "+n+" "+item+" cost $"+total+", what is the cost of "+q+"?","$"+ans,
+  "Unit rate: $"+total+" ÷ "+n+" = $"+unit+" each. "+q+" × $"+unit+" = $"+ans+".",
+  "First find the cost of one (divide), then multiply by how many you want.",chkMoney(ans));}
+function rPart(g,l){const a=ri(1,5),b=ri(1,5),k=ri(2,l===1?5:8),total=(a+b)*k,askB=Math.random()<.5,ans=(askB?b:a)*k;
+ return Q("The ratio of cats to dogs is "+a+" : "+b+". There are "+total+" animals in total. How many "+(askB?"dogs":"cats")+"?",String(ans),
+  "Total parts "+a+"+"+b+"="+(a+b)+". One part = "+total+"÷"+(a+b)+"="+k+". "+(askB?b:a)+" parts × "+k+" = "+ans+".",
+  "Add the ratio parts for the total number of parts, then divide the total to find one part.",chkNum(ans));}
+function genRatio(g,l){let pool;
+ if(g===5)pool=l===1?[rEq,rScale]:l===2?[rEq,rScale,rSimp]:[rSimp,rScale,rEq];
+ else if(g===6)pool=[rScale,rUnit,rPart];
+ else if(g===7)pool=l===1?[rEq,rProp]:[rProp,rUnit,rEq];
+ else pool=l===1?[rPart,rUnit]:[rPart,rUnit,rProp,rEq];
+ return pick(pool)(g,l);}
+function mFacts(g,l){const r=l===1?6:12,a=ri(2,r),b=ri(2,r),prod=a*b;
+ if(Math.random()<.5)return Q(a+" × "+b+" = ?",String(prod),a+" rows of "+b+" = "+prod+". Also "+b+" × "+a+" = "+prod+".",
+  "Use a known fact and build up, or picture an array.",chkNum(prod));
+ return Q(prod+" ÷ "+a+" = ?",String(b),"Think "+a+" × ? = "+prod+". Since "+a+" × "+b+" = "+prod+", the answer is "+b+".",
+  "Division undoes multiplication: ask "+a+" times what makes "+prod+"?",chkNum(b));}
+function mArea(g,l){const two=l===3||g>=7,T=ri(1,3)*10+ri(1,9),u=two?ri(1,3)*10+ri(1,9):ri(2,6),ans=T*u;
+ const t1=Math.floor(T/10)*10,o1=T%10,t2=Math.floor(u/10)*10,o2=u%10;let ex;
+ if(two)ex="Split both: ("+t1+"+"+o1+")×("+t2+"+"+o2+"). Parts: "+(t1*t2)+", "+(t1*o2)+", "+(o1*t2)+", "+(o1*o2)+". Add: "+ans+".";
+ else ex="Split "+T+" into "+t1+"+"+o1+". "+t1+"×"+u+"="+(t1*u)+", "+o1+"×"+u+"="+(o1*u)+". Add: "+ans+".";
+ return Q("Use the area model: "+T+" × "+u+" = ?",String(ans),ex,"Break each number into tens and ones, multiply each part, then add all the parts.",chkNum(ans));}
+function mTenths(g,l){const d=ri(1,9),t=d/10;
+ if(Math.random()<.5){const N=(l===1?ri(1,9):ri(10,99))*10,ans=N*t;
+  return Q(N+" × "+t+" = ?",String(ans),N+" × "+d+"/10 = "+(N*d)+"/10 = "+ans+". Multiply by "+d+", then divide by 10.",
+   "Multiply by "+d+", then divide by 10 (move the decimal one place left).",chkNum(ans));}
+ const res=ri(2,l===1?9:20),N=res*d,ans=res*10;
+ return Q(N+" ÷ "+t+" = ?",String(ans),N+" ÷ ("+d+"/10) = "+N+" × 10/"+d+" = "+ans+". Dividing by a tenth makes the number larger.",
+  "Dividing by "+d+"/10 is the same as multiplying by 10/"+d+".",chkNum(ans));}
+function mSquares(g,l){const n=ri(2,l===1?9:12),sq=n*n;
+ if(Math.random()<.5)return Q(n+"² = ?",String(sq),n+"² = "+n+" × "+n+" = "+sq+".","Squaring means multiplying the number by itself.",chkNum(sq));
+ return Q("√"+sq+" = ?",String(n),"√"+sq+" asks: what number × itself = "+sq+"? "+n+" × "+n+" = "+sq+".","Find the number that multiplies by itself to give "+sq+".",chkNum(n));}
+function genMult(g,l){let pool;
+ if(g===5)pool=l===1?[mFacts]:[mFacts,mArea];
+ else if(g===6)pool=[mTenths,mFacts,mTenths];
+ else if(g===7)pool=[mFacts,mArea,mTenths];
+ else pool=l===1?[mSquares,mFacts]:[mSquares,mArea,mFacts];
+ return pick(pool)(g,l);}
+function el(tag,attrs,parent,text){const n=document.createElement(tag);if(attrs)for(const k in attrs)n.setAttribute(k,attrs[k]);if(text!==undefined)n.textContent=text;if(parent)parent.appendChild(n);return n;}
+const SVGNS="http://www.w3.org/2000/svg";
+function sv(tag,attrs,parent){const n=document.createElementNS(SVGNS,tag);for(const k in attrs)n.setAttribute(k,attrs[k]);if(parent)parent.appendChild(n);return n;}
+function makeSvg(parent,w,h,label){parent.querySelectorAll("svg").forEach(function(s){s.remove();});const s=sv("svg",{viewBox:"0 0 "+w+" "+h,role:"img","aria-label":label,focusable:"false"});parent.appendChild(s);return s;}
+function slider(parent,labelText,min,max,val,oninput){
+ const w=el("label",{class:"sl"},parent);el("span",{},w,labelText);
+ const r=el("input",{type:"range",min:min,max:max,value:val},w);
+ const out=el("span",{class:"val"},w,String(val));
+ r.addEventListener("input",function(){out.textContent=r.value;oninput(+r.value);});
+ return {set:function(v){r.value=v;out.textContent=String(v);}};}
+function buildFractionsExplore(box){
+ let n1=1,d1=2,n2=2,d2=4;
+ const ctl=el("div",{class:"ctl"},box);
+ const fsA=el("fieldset",{},ctl);el("legend",{},fsA,"Fraction A");
+ const sN1=slider(fsA,"Numerator",1,12,n1,function(v){n1=Math.min(v,d1);sN1.set(n1);render();});
+ const sD1=slider(fsA,"Denominator",1,12,d1,function(v){d1=v;if(n1>d1){n1=d1;sN1.set(n1);}render();});
+ const fsB=el("fieldset",{},ctl);el("legend",{},fsB,"Fraction B");
+ const sN2=slider(fsB,"Numerator",1,12,n2,function(v){n2=Math.min(v,d2);sN2.set(n2);render();});
+ const sD2=slider(fsB,"Denominator",1,12,d2,function(v){d2=v;if(n2>d2){n2=d2;sN2.set(n2);}render();});
+ const row=el("div",{class:"btnrow"},box);
+ el("button",{type:"button",class:"btn sec mini"},row,"Make B equivalent to A").addEventListener("click",function(){
+  const s=simp(n1,d1);let target=null;
+  for(const k of [2,3,4,5,6]){if(s[1]*k<=12&&s[1]*k!==d1){target=[s[0]*k,s[1]*k];break;}}
+  if(!target)target=s;
+  n2=target[0];d2=target[1];sN2.set(n2);sD2.set(d2);render();});
+ el("span",{class:"muted"},row,"This model shows fractions up to one whole.");
+ const vis=el("div",{class:"visual","aria-live":"polite"},box);
+ const capA=el("p",{class:"caption"},vis);const barA=el("div",{},vis);
+ const capB=el("p",{class:"caption"},vis);const barB=el("div",{},vis);
+ const verdict=el("p",{class:"verdict"},vis);
+ function drawBar(parent,n,d,color){
+  const s=makeSvg(parent,640,84,"Fraction bar: "+n+" of "+d+" equal parts shaded.");
+  sv("rect",{x:20,y:16,width:600,height:52,fill:"#fff"},s);
+  sv("rect",{x:20,y:16,width:600*n/d,height:52,fill:color},s);
+  for(let i=1;i<d;i++)sv("line",{x1:20+600*i/d,y1:16,x2:20+600*i/d,y2:68,stroke:"#1a2333","stroke-width":1,opacity:.55},s);
+  sv("rect",{x:20,y:16,width:600,height:52,fill:"none",stroke:"#1a2333","stroke-width":2},s);}
+ function render(){
+  drawBar(barA,n1,d1,"#2563eb");drawBar(barB,n2,d2,"#b45309");
+  const fa=fmtF(n1,d1),fb=fmtF(n2,d2);
+  capA.textContent="Fraction A: "+n1+"/"+d1+(fa!==n1+"/"+d1?" = "+fa:"");
+  capB.textContent="Fraction B: "+n2+"/"+d2+(fb!==n2+"/"+d2?" = "+fb:"");
+  verdict.textContent=n1*d2===n2*d1?"✓ Equivalent — both bars shade the same amount.":(n1*d2>n2*d1?"Fraction A is greater. The bars shade different amounts.":"Fraction B is greater. The bars shade different amounts.");}
+ render();}
+function buildPercentExplore(box){
+ let p=45;
+ const ctl=el("div",{class:"ctl"},box);
+ const fs=el("fieldset",{},ctl);el("legend",{},fs,"Shade the grid");
+ const sl=slider(fs,"Percent",0,100,p,function(v){p=v;num.value=v;render();});
+ const nl=el("label",{class:"nl"},ctl,"Or type a percent (0–100)");
+ const num=el("input",{type:"number",min:0,max:100,step:1,value:p},nl);
+ num.addEventListener("input",function(){const v=parseInt(num.value,10);if(Number.isFinite(v)){p=Math.max(0,Math.min(100,v));sl.set(p);render();}});
+ const presets=el("div",{class:"btnrow"},box);
+ [10,25,50,75,100].forEach(function(v){el("button",{type:"button",class:"btn sec mini"},presets,v+"%").addEventListener("click",function(){p=v;sl.set(v);num.value=v;render();});});
+ const vis=el("div",{class:"visual","aria-live":"polite"},box);
+ const stats=el("p",{},vis);
+ const stP=el("span",{class:"stat"},stats);const stD=el("span",{class:"stat"},stats);const stF=el("span",{class:"stat"},stats);
+ const grid=el("div",{},vis);const cap=el("p",{class:"caption"},vis);
+ function render(){
+  const s=makeSvg(grid,340,340,p+" of 100 squares shaded: "+p+"% equals "+(p/100)+" equals "+fmtF(p,100)+".");
+  for(let i=0;i<100;i++)sv("rect",{x:10+(i%10)*32,y:10+Math.floor(i/10)*32,width:30,height:30,rx:3,fill:i<p?"#2563eb":"#e9eef5",stroke:"#fff"},s);
+  sv("rect",{x:8,y:8,width:324,height:324,fill:"none",stroke:"#1a2333","stroke-width":2},s);
+  stP.textContent="Percent: "+p+"%";stD.textContent="Decimal: "+(p/100);stF.textContent="Fraction: "+fmtF(p,100);
+  cap.textContent=p+"% means "+p+" out of 100 equal squares."+(p===100?" That is one whole.":p===0?" Nothing is shaded yet.":"");}
+ render();}
+function buildIntegersExplore(box){
+ let a=-3,b=5,op="+";
+ const ctl=el("div",{class:"ctl"},box);
+ const la=el("label",{class:"nl"},ctl,"First number (a)");
+ const ia=el("input",{type:"number",min:-12,max:12,step:1,value:a},la);
+ const lo=el("label",{class:"nl"},ctl,"Operation");
+ const sel=el("select",{},lo);
+ ["+","−","×","÷"].forEach(function(o){el("option",{value:o},sel,o==="+"?"+ (add)":o==="−"?"− (subtract)":o==="×"?"× (multiply)":"÷ (divide)");});
+ const lb=el("label",{class:"nl"},ctl,"Second number (b)");
+ const ib=el("input",{type:"number",min:-12,max:12,step:1,value:b},lb);
+ ia.addEventListener("input",function(){const v=parseInt(ia.value,10);if(Number.isFinite(v)){a=Math.max(-12,Math.min(12,v));render();}});
+ ib.addEventListener("input",function(){const v=parseInt(ib.value,10);if(Number.isFinite(v)){b=Math.max(-12,Math.min(12,v));render();}});
+ sel.addEventListener("change",function(){op=sel.value;render();});
+ const vis=el("div",{class:"visual","aria-live":"polite"},box);
+ const eq=el("p",{class:"verdict"},vis);const line=el("div",{},vis);const cap=el("p",{class:"caption"},vis);
+ function render(){
+  const res=op==="+"?a+b:(op==="−"?a-b:(op==="×"?a*b:(b===0?NaN:a/b)));
+  if(!Number.isFinite(res)){eq.textContent=par(a)+" ÷ 0 = undefined";cap.textContent="Division by zero is undefined.";line.querySelectorAll("svg").forEach(function(s){s.remove();});return;}
+  const rr=Math.round(res*1000)/1000;
+  eq.textContent=par(a)+" "+op+" "+par(b)+" = "+fmtN(res);
+  const loV=Math.min(0,a,rr)-2,hiV=Math.max(0,a,rr)+2,span=hiV-loV;
+  const step=span<=26?1:(span<=60?5:(span<=160?10:20));
+  const X=function(v){return 30+(v-loV)*(580/span);};
+  const s=makeSvg(line,640,140,"Number line from "+loV+" to "+hiV+". Start at "+a+". Result: "+fmtN(res)+".");
+  const defs=sv("defs",{},s);const mk=sv("marker",{id:"iarw",markerWidth:8,markerHeight:8,refX:6,refY:3,orient:"auto"},defs);
+  sv("path",{d:"M0,0 L6,3 L0,6 Z",fill:"#1a2333"},mk);
+  sv("line",{x1:24,y1:78,x2:616,y2:78,stroke:"#1a2333","stroke-width":2},s);
+  for(let v=Math.ceil(loV/step)*step;v<=hiV;v+=step){
+   sv("line",{x1:X(v),y1:72,x2:X(v),y2:84,stroke:"#1a2333","stroke-width":v===0?2.5:1},s);
+   const t=sv("text",{x:X(v),y:104,"text-anchor":"middle","font-size":13,fill:"#1a2333","font-weight":v===0?"700":"400"},s);t.textContent=String(v);}
+  const xa=X(a),xr=X(rr);
+  if((op==="+"||op==="−")&&a!==rr)sv("path",{d:"M "+xa+" 60 Q "+((xa+xr)/2)+" 24 "+xr+" 60",fill:"none",stroke:"#1a2333","stroke-width":2.5,"marker-end":"url(#iarw)"},s);
+  sv("circle",{cx:xa,cy:78,r:7,fill:"#2563eb",stroke:"#1a2333","stroke-width":1.5},s);
+  sv("circle",{cx:xr,cy:78,r:7,fill:"#116932",stroke:"#1a2333","stroke-width":1.5},s);
+  const cX=function(x){return Math.max(46,Math.min(594,x));};
+  if(a===rr){const t=sv("text",{x:cX(xa),y:128,"text-anchor":"middle","font-size":13,fill:"#1a2333"},s);t.textContent="start = result = "+a;}
+  else{const t1=sv("text",{x:cX(xa),y:128,"text-anchor":"middle","font-size":13,fill:"#1a2333"},s);t1.textContent="start: "+a;
+   const t2=sv("text",{x:cX(xr),y:128,"text-anchor":"middle","font-size":13,fill:"#1a2333"},s);t2.textContent="result: "+fmtN(res);}
+  cap.textContent="Blue dot: start. Green dot: result. "+explainInt(a,op,b,rr);}
+ render();}
+function buildRatioExplore(box){
+ let a=2,b=3;
+ const ctl=el("div",{class:"ctl"},box);
+ const fs=el("fieldset",{},ctl);el("legend",{},fs,"Ratio a : b (blue : orange)");
+ slider(fs,"a (blue)",1,12,a,function(v){a=v;render();});
+ slider(fs,"b (orange)",1,12,b,function(v){b=v;render();});
+ const vis=el("div",{class:"visual","aria-live":"polite"},box);
+ const counters=el("div",{},vis);const cap=el("p",{class:"caption"},vis);
+ const tw=el("div",{class:"tw"},box);const table=el("table",{},tw);
+ const thead=el("thead",{},table);const hr=el("tr",{},thead);
+ ["Scale factor","Equivalent ratio","Total counters"].forEach(function(h){el("th",{},hr,h);});
+ const tbody=el("tbody",{},table);
+ const pfs=el("fieldset",{},box);el("legend",{},pfs,"Proportion check");
+ const ptext=el("p",{},pfs);const prow=el("div",{class:"ctl"},pfs);
+ const lc=el("label",{class:"nl"},prow,"Third term (c)");const ic=el("input",{type:"number",min:1,max:144,step:1,value:4},lc);
+ const ld=el("label",{class:"nl"},prow,"Fourth term (d)");const idn=el("input",{type:"number",min:1,max:144,step:1,value:6},ld);
+ el("button",{type:"button",class:"btn mini"},prow,"Check proportion").addEventListener("click",function(){
+  const c=Math.max(1,parseInt(ic.value,10)||1),d=Math.max(1,parseInt(idn.value,10)||1),ok=a*d===b*c;
+  pres.textContent=(ok?"✓ ":"✗ ")+a+" : "+b+" and "+c+" : "+d+(ok?" form a proportion. ":" do not form a proportion. ")+"Cross products: "+a+" × "+d+" = "+(a*d)+" and "+b+" × "+c+" = "+(b*c)+"."+(ok?" They are equal.":" They are different.");});
+ const pres=el("p",{class:"verdict",role:"status"},pfs);
+ function render(){
+  const total=a+b,perRow=12,rows=Math.ceil(total/perRow);
+  const s=makeSvg(counters,424,rows*34+10,a+" blue counters and "+b+" orange counters. Ratio "+a+" to "+b+".");
+  for(let i=0;i<total;i++)sv("circle",{cx:22+(i%perRow)*34,cy:22+Math.floor(i/perRow)*34,r:13,fill:i<a?"#2563eb":"#b45309",stroke:"#1a2333","stroke-width":1},s);
+  const g=gcd(a,b),sa=a/g,sb=b/g;
+  cap.textContent="For every "+a+" blue there "+(b===1?"is ":"are ")+b+" orange. Simplest form: "+sa+" : "+sb+". Total counters: "+total+".";
+  ptext.textContent="Is "+a+" : "+b+" = "+(ic.value||"c")+" : "+(idn.value||"d")+" ? Type c and d, then check.";
+  tbody.textContent="";
+  for(let k=1;k<=4;k++){const tr=el("tr",{},tbody);el("td",{},tr,"× "+k);el("td",{},tr,(a*k)+" : "+(b*k));el("td",{},tr,String(total*k));}}
+ render();}
+function buildMultExplore(box){
+ let a=7,b=8,div=false;
+ const ctl=el("div",{class:"ctl"},box);
+ const fs=el("fieldset",{},ctl);el("legend",{},fs,"Array: rows × columns");
+ slider(fs,"Rows",1,12,a,function(v){a=v;render();});
+ slider(fs,"Columns",1,12,b,function(v){b=v;render();});
+ const dl=el("label",{class:"proj"},ctl);const dc=el("input",{type:"checkbox"},dl);dl.appendChild(document.createTextNode(" Show division groups"));
+ dc.addEventListener("change",function(){div=dc.checked;render();});
+ const vis=el("div",{class:"visual","aria-live":"polite"},box);
+ const arr=el("div",{},vis);const cap=el("p",{class:"caption"},vis);const facts=el("p",{class:"verdict"},vis);
+ function render(){
+  const w=40+b*28+6,h=26+a*28+6;
+  const label=div?(a*b)+" divided into "+a+" equal groups of "+b+".":a+" rows of "+b+" counters: "+a+" times "+b+" equals "+(a*b)+".";
+  const s=makeSvg(arr,w,h,label);
+  for(let j=0;j<b;j++){const t=sv("text",{x:40+j*28+13,y:16,"text-anchor":"middle","font-size":12,fill:"#1a2333"},s);t.textContent=String(j+1);}
+  for(let i=0;i<a;i++){const t=sv("text",{x:30,y:26+i*28+17,"text-anchor":"end","font-size":12,fill:"#1a2333"},s);t.textContent=String(i+1);}
+  for(let i=0;i<a;i++)for(let j=0;j<b;j++)sv("rect",{x:40+j*28,y:26+i*28,width:26,height:26,rx:3,fill:div?(i%2?"#b45309":"#2563eb"):"#2563eb",stroke:"#fff"},s);
+  cap.textContent=div?(a*b)+" ÷ "+a+" = "+b+": "+(a*b)+" counters shared into "+a+" equal groups of "+b+".":a+" rows × "+b+" columns = "+(a*b)+" counters.";
+  facts.textContent=a+" × "+b+" = "+(a*b)+"  ·  "+b+" × "+a+" = "+(a*b)+"  ·  "+(a*b)+" ÷ "+a+" = "+b+"  ·  "+(a*b)+" ÷ "+b+" = "+a;}
+ render();}
+let GRADE=5,LEVEL=2;
+const RESETS=[],OBJ_UPDATERS=[];
+function buildPractice(box,topic){
+ const st={i:0,score:0,q:null,locked:false,done:false};
+ const prog=el("p",{class:"progress"},box);
+ const prompt=el("p",{class:"qprompt",id:topic.id+"-q"},box);
+ const hint=el("details",{class:"hint"},box);el("summary",{},hint,"Show a hint");const hintP=el("p",{},hint);
+ const form=el("form",{},box);
+ const inWrap=el("div",{class:"ctl"},form);
+ const input=el("input",{type:"text",class:"ans",autocomplete:"off","aria-labelledby":topic.id+"-q",placeholder:"Type your answer"},inWrap);
+ const checkBtn=el("button",{type:"submit",class:"btn"},inWrap,"Check answer");
+ const choices=el("div",{class:"choices"},form);
+ const nextBtn=el("button",{type:"button",class:"btn sec",hidden:""},form,"Next question");
+ const fb=el("p",{class:"feedback",role:"status"},box);
+ form.addEventListener("submit",function(e){e.preventDefault();if(!st.locked&&!st.done&&st.q&&st.q.kind==="input")answer(input.value);});
+ nextBtn.addEventListener("click",function(){if(st.done){st.done=false;st.i=0;st.score=0;showQ(true);}else if(st.i>=5)finish();else showQ(true);});
+ function showQ(withFocus){
+  st.q=topic.gen(GRADE,LEVEL);st.locked=false;hint.hidden=false;
+  prog.textContent="Grade "+GRADE+" · "+["","Beginner","Standard","Challenge"][LEVEL]+" · Question "+(st.i+1)+" of 5 · Score: "+st.score;
+  prompt.textContent=st.q.prompt;hintP.textContent=st.q.hint||"Think about the model in the Explore section.";hint.open=false;
+  fb.textContent="";fb.className="feedback";choices.textContent="";nextBtn.hidden=true;
+  if(st.q.kind==="input"){inWrap.hidden=false;choices.hidden=true;input.value="";input.disabled=false;checkBtn.disabled=false;if(withFocus)input.focus();}
+  else{inWrap.hidden=true;choices.hidden=false;
+   st.q.choices.forEach(function(c,idx){el("button",{type:"button"},choices,c).addEventListener("click",function(){answer(idx);});});
+   if(withFocus){const f=choices.querySelector("button");if(f)f.focus();}}}
+ function answer(val){
+  if(st.locked||st.done)return;st.locked=true;
+  const q=st.q,ok=q.kind==="input"?q.check(val):val===q.correct;
+  if(ok)st.score++;
+  fb.className="feedback "+(ok?"ok":"no");
+  fb.textContent=(ok?"✓ Correct. ":"✗ Not quite. The answer is "+q.display+". ")+q.explain;
+  if(q.kind==="input"){input.disabled=true;checkBtn.disabled=true;}
+  else Array.prototype.forEach.call(choices.children,function(btn,idx){btn.disabled=true;if(idx===q.correct)btn.classList.add("correct");else if(idx===val)btn.classList.add("wrong");});
+  st.i++;nextBtn.hidden=false;nextBtn.textContent=st.i>=5?"See results":"Next question";nextBtn.focus();}
+ function finish(){
+  st.done=true;prog.textContent="Set complete — you answered "+st.score+" of 5 correctly.";
+  prompt.textContent=st.score>=4?"Great work! Try the Challenge below, or start a new set.":"Good effort! Revisit the Explore section, then try a new set.";
+  fb.textContent="";fb.className="feedback";inWrap.hidden=true;choices.hidden=true;hint.hidden=true;
+  nextBtn.textContent="Start a new set";nextBtn.hidden=false;nextBtn.focus();}
+ RESETS.push(function(){st.done=false;st.i=0;st.score=0;hint.hidden=false;showQ(false);});
+ showQ(false);}
+const TOPICS=[
+ {id:"fractions",name:"Fractions",chips:["Grade 5 · B1.3, B1.4","Grade 6 · B2.5","Grade 7 · B1.4","Grade 8 · B2.5"],gen:genFractions,explore:buildFractionsExplore,
+  exploreHint:"Drag the sliders. Predict first: will the two bars match? Then check the verdict.",
+  learn:["A fraction names equal parts of a whole. The denominator tells how many equal parts the whole is cut into; the numerator tells how many of those parts you have.",
+   "Equivalent fractions look different but name the same amount. Multiplying or dividing the numerator and denominator by the same non-zero number keeps the value unchanged — the pieces change size, not the amount."],
+  keyIdea:"Same amount, different pieces: 1/2 = 2/4 = 4/8 = 6/12.",
+  objectives:{5:"Represent equivalent fractions (halves–twelfths) and compare fractions (B1.3, B1.4); add/subtract like denominators (B2.5).",6:"Add/subtract fractions with like and unlike denominators (B2.5); connect fractions and decimals (B1.6).",7:"Simplify using equivalent fractions (B1.4); add/subtract fractions (B2.5); compare rational numbers (B1.3).",8:"Operate with fractions flexibly (B2.5, B2.6) and use fractions in proportional reasoning (B2.8)."},
+  notice:["Notice the number of pieces can change while the shaded amount stays the same.","Notice a larger denominator means smaller pieces.","Notice which bar shades more when the fractions are not equivalent."],
+  explain:{prompt:"Explain to a partner how you know 2/3 = 8/12. Use the words numerator, denominator and \u201csame amount\u201d.",model:"Multiply the numerator and denominator of 2/3 by 4 to get 8/12. The whole is cut into 4 times as many pieces and we take 4 times as many, so the shaded amount is unchanged."},
+  challenge:{prompt:"Find a fraction that lies between 1/3 and 1/2, and explain how you know it is in between.",hint:"Rewrite both fractions with a common denominator of 12. Is there a twelfth between them? If not, try 24.",answer:"1/3 = 4/12 and 1/2 = 6/12, so 5/12 lies between them: 4/12 < 5/12 < 6/12. Many answers work — 9/24 and 11/24 also."},
+  reflect:{prompt:"A classmate says 3/4 and 6/8 must be different because the numbers are different. Explain why they name the same amount.",starters:"\u201cI know they are equivalent because…\u201d · \u201cThe picture shows…\u201d"},
+  teacher:{goal:"See equivalence as the same amount with different partitioning; compare and operate with fractions.",duration:"10-min demo · 30–40-min lesson",prior:"Equal parts; reading fractions; multiplication facts",
+   demo:["Set A to 1/2. Ask: \u201cPredict a fraction equal to one half.\u201d Then set B to 2/4 and check the bars.","Press \u201cMake B equivalent to A\u201d and ask what changed and what stayed the same.","Change only A\u2019s denominator: why does the shaded amount shrink?"],
+   discuss:["Why does multiplying top and bottom by the same number keep the value?","Are 3/4 and 6/8 the same point on a number line?","Can two fractions with different denominators ever be equal?"],
+   watch:["\u201cBigger numbers mean a bigger fraction\u201d — compare 2/4 and 1/2.","Adding the same number to top and bottom (1/2 → 2/3) is not equivalence.","Reading the denominator as the number shaded instead of the number of parts."],
+   diff:["Beginner: denominators ≤ 6, like denominators.","Standard: unlike denominators to eighths.","Challenge: twelfths, simplifying, negative fractions (Gr 7–8)."],extension:"Find a fraction between two given fractions; create a visual proof of equivalence."}},
+ {id:"percents",name:"Decimals & Percents",chips:["Grade 5 · B1.5, B1.7","Grade 6 · B2.3","Grade 7 · B1.7","Grade 8 · B1.4"],gen:genPercents,explore:buildPercentExplore,
+  exploreHint:"Slide or type a percent. Say the decimal and fraction aloud before reading them.",
+  learn:["Per cent means \u201cout of 100\u201d. 45% is 45 out of 100 equal parts — the same amount as the decimal 0.45 and the fraction 45/100.",
+   "Fractions, decimals and percents are three names for the same number. A 10×10 grid makes the connection visible: each small square is 1% = 0.01 = 1/100."],
+  keyIdea:"Percent ↔ decimal: divide or multiply by 100 (move the decimal point two places).",
+  objectives:{5:"Show equivalences among fractions, decimals to hundredths and whole-number percents (B1.5, B1.7).",6:"Use mental math for 1%, 5%, 10%, 15%, 25%, 50% of whole numbers (B2.3).",7:"Convert fractions/decimals/percents (B1.7); recall common equivalents (B2.2); increase/decrease by a percent (B2.3).",8:"Use fractions, decimals and percents interchangeably, including percents > 100% and < 1% (B1.4)."},
+  notice:["Notice each small square is 1% = 0.01 = 1/100.","Notice the decimal and fraction update to name the same shaded amount.","Notice 100% fills the whole grid and 50% fills half."],
+  explain:{prompt:"Explain why 45% = 0.45 = 45/100. Use the words \u201cout of 100\u201d.",model:"Percent means out of 100, so 45% is 45 of 100 squares. As a fraction that is 45/100; dividing 45 by 100 gives the decimal 0.45."},
+  challenge:{prompt:"A $80 jacket is discounted 25%, then the sale price is discounted another 10%. Is this the same as a single 35% discount? Show your reasoning.",hint:"Calculate step by step: first 25% off $80, then 10% off the new price. Compare with 35% off $80.",answer:"No. 25% off $80 gives $60; 10% off $60 gives $54. A single 35% discount gives $52. Successive percents apply to different wholes, so they do not simply add."},
+  reflect:{prompt:"Describe one place you have seen a percent outside school. Explain it using the words \u201cout of 100\u201d.",starters:"\u201cI saw …% when…\u201d · \u201cThat means … out of 100…\u201d"},
+  teacher:{goal:"Connect percent, decimal and fraction as names for the same number; build mental-math percent strategies.",duration:"10-min demo · 30–40-min lesson",prior:"Fractions and decimals to hundredths; division by 10/100",
+   demo:["Slide to 50%. Ask for the decimal and fraction before revealing the stats.","Set 7%: why is the decimal 0.07 and not 0.7?","Find 25% of 80 using the grid idea (divide into quarters)."],
+   discuss:["Why does the decimal point move two places?","Where do you see percents in real life?","Is 0.5% the same as 50%? Explain."],
+   watch:["0.7 vs 0.07 place-value slips.","Treating percent as a unit rather than \u201cout of 100\u201d.","Assuming percents cannot exceed 100 (bridge to Grade 8)."],
+   diff:["Beginner: benchmark percents 10/25/50.","Standard: mental-math percents incl. 1%, 5%, 15%.","Challenge: increase/decrease; percents > 100% (Gr 8)."],extension:"Compare successive discounts vs a single discount; analyse a real sale flyer."}},
+ {id:"integers",name:"Integers",chips:["Grade 6 · B1.2","Grade 7 · B2.4","Grade 8 · B2.7"],gen:genIntegers,explore:buildIntegersExplore,
+  exploreHint:"Choose two integers and an operation. Predict the landing point, then read the arrow.",
+  learn:["Integers are the whole numbers and their opposites: … −3, −2, −1, 0, 1, 2, 3 … They describe temperature, elevation, money owed, and scores above or below zero.",
+   "On a number line, adding moves right and subtracting moves left. Adding a negative moves left; subtracting a negative moves right — it is the same as adding the opposite."],
+  keyIdea:"Same signs multiply to a positive; different signs multiply to a negative.",
+  objectives:{5:"Readiness: number-line position and opposites; addition/subtraction stories (bridges to Grade 6 B1.2).",6:"Read, represent, compare and order integers on number lines (B1.2, B1.3).",7:"Add and subtract integers using diagrams and equations (B2.4).",8:"Add/subtract (B2.4) and multiply/divide integers (B2.7)."},
+  notice:["Notice adding moves right and subtracting moves left.","Notice subtracting a negative flips the arrow to the right.","Notice the sign of a product depends on whether the signs match."],
+  explain:{prompt:"Explain why (−3) + 5 = 2 using the number line.",model:"Start at −3. Adding 5 moves 5 steps to the right: −2, −1, 0, 1, 2. You land on 2."},
+  challenge:{prompt:"The temperature is −4 °C. It drops 6 degrees overnight, then rises 10 degrees by afternoon. Write one integer expression and find the final temperature.",hint:"A drop is subtraction; a rise is addition. Start at −4 on the number line.",answer:"(−4) − 6 + 10 = 0. First −4 − 6 lands on −10; then adding 10 moves right to 0 °C."},
+  reflect:{prompt:"Explain why subtracting a negative number moves you to the right on the number line. Use a temperature or money story.",starters:"\u201cSubtracting a negative is like…\u201d · \u201cIn my story…\u201d"},
+  teacher:{goal:"Model integer operations as directed movement on a number line, then generalize sign rules.",duration:"10-min demo · 30–40-min lesson",prior:"Number line; whole-number operations; opposites",
+   demo:["Start at −3, add 5: predict the landing point, then check the arrow.","Subtract a negative: why does the arrow flip direction?","Multiply (−3) × 4 and connect to repeated addition."],
+   discuss:["Why is subtracting a negative the same as adding?","Give a temperature or debt story for (−4) + 10.","Why does a negative times a negative give a positive?"],
+   watch:["\u201cTwo negatives make a positive\u201d overgeneralized to addition.","Confusing the operation sign with the number\u2019s sign.","Order matters in subtraction: a − b is not b − a."],
+   diff:["Beginner: small magnitudes, number-line support.","Standard: add/subtract within ±12.","Challenge: ±20; multiply/divide (Gr 8)."],extension:"Write a temperature or debt story for a given integer expression."}},
+ {id:"ratio",name:"Ratio & Proportion",chips:["Grade 5 · B2.9","Grade 6 · B2.12","Grade 7 · B2.10","Grade 8 · B2.8"],gen:genRatio,explore:buildRatioExplore,
+  exploreHint:"Build a ratio, read the equivalent-ratio table, then test a proportion with cross products.",
+  learn:["A ratio compares quantities. 2 : 3 can mean \u201cfor every 2 blue counters there are 3 orange counters\u201d (part-to-part), or it can compare a part with the whole.",
+   "Equivalent ratios are made by multiplying or dividing both parts by the same number. Two equivalent ratios form a proportion, and their cross products are equal."],
+  keyIdea:"Scale both parts by the same factor and the relationship stays the same: 2 : 3 = 4 : 6 = 6 : 9.",
+  objectives:{5:"Represent and create equivalent ratios and rates (B2.9).",6:"Solve problems involving ratios, percents and rates (B2.12).",7:"Identify proportional situations and apply proportional reasoning (B2.10).",8:"Compare proportional situations and determine unknown values (B2.8)."},
+  notice:["Notice the order of the parts matters (blue : orange).","Notice multiplying both parts by the same number keeps the relationship.","Notice the total grows when you scale, but the simplest form stays the same."],
+  explain:{prompt:"Explain why 2 : 3 and 4 : 6 are equivalent.",model:"Multiply both parts of 2 : 3 by 2 to get 4 : 6. For every 2 blue there are 3 orange — the same relationship as 4 blue to 6 orange. Cross products 2×6 and 3×4 both equal 12."},
+  challenge:{prompt:"Paint is mixed blue : yellow = 3 : 2. How many litres of each colour make 20 L of paint? If you only have 6 L of blue, how much yellow do you need, and how much paint can you make?",hint:"The whole is 3 + 2 = 5 parts. How many litres is one part in 20 L?",answer:"20 L ÷ 5 parts = 4 L per part, so 12 L blue and 8 L yellow. With 6 L of blue the scale factor is 2, so you need 4 L of yellow and can make 10 L of paint."},
+  reflect:{prompt:"Invent a real situation with a ratio of 2 : 3. What changes and what stays the same when you scale it up?",starters:"\u201cFor every … there are …\u201d · \u201cWhen I double both parts…\u201d"},
+  teacher:{goal:"Build equivalent ratios from part-to-part models and test proportions.",duration:"10-min demo · 30–40-min lesson",prior:"Multiplication/division; equivalent fractions",
+   demo:["Set 2 : 3. Ask for three equivalent ratios before showing the table.","Scale a 2 : 3 recipe by 4 — what happens to the total?","Check 4 : 6 and 6 : 9 with the proportion checker; verify with cross products."],
+   discuss:["What stays the same when a ratio scales?","Part-to-part vs part-to-whole: what is blue : total here?","How can cross products test a proportion?"],
+   watch:["Adding instead of multiplying to scale (2 : 3 → 3 : 4).","Reversing the order of the parts.","Treating a ratio as a single number rather than a relationship."],
+   diff:["Beginner: small ratios, concrete counters.","Standard: scaling and unit rate.","Challenge: proportions, part-whole, larger numbers."],extension:"Scale a recipe; design a scale drawing; compare unit prices."}},
+ {id:"mult",name:"Multiply & Divide",chips:["Grade 5 · B2.2, B2.6","Grade 6 · B2.7, B2.8","Grade 8 · B2.2"],gen:genMult,explore:buildMultExplore,
+  exploreHint:"Build an array, read the fact family, then switch on division groups.",
+  learn:["Multiplication counts equal groups. An array of 7 rows with 8 in each row shows 7 × 8 = 56 — and rotating it shows 8 × 7 = 56.",
+   "Division undoes multiplication: 56 ÷ 7 asks how many are in each of 7 equal groups. The area model also splits bigger products into friendly parts: 23 × 4 = (20 × 4) + (3 × 4)."],
+  keyIdea:"One array, four facts: 7 × 8 = 56, 8 × 7 = 56, 56 ÷ 7 = 8, 56 ÷ 8 = 7.",
+  objectives:{5:"Recall facts to 12×12 and related division (B2.2); area model for 2-digit multiplication (B2.6).",6:"Multiply and divide whole numbers by decimal tenths (B2.7, B2.8).",7:"Fluency with facts and properties of operations (B2.1).",8:"Recall square numbers to 144 and their square roots (B2.2); operate with rational numbers (B2.1)."},
+  notice:["Notice the array shows rows × columns.","Notice rotating the array keeps the total (order doesn\u2019t matter).","Notice division splits the same array into equal groups."],
+  explain:{prompt:"Explain how 7 × 8 = 56 gives you 56 ÷ 7 = 8.",model:"The array has 7 rows of 8, making 56. Division asks how many are in each of 7 equal groups; since 7 × 8 = 56, each group has 8."},
+  challenge:{prompt:"Explain two different ways to calculate 24 × 25 without a calculator. Then use your result to find 600 ÷ 8 mentally.",hint:"Try an area model (20 + 4) × 25, or think of 25 as 100 ÷ 4.",answer:"Area model: 20 × 25 = 500 and 4 × 25 = 100, so 24 × 25 = 600. Or 24 × 25 = 24 × 100 ÷ 4 = 600. Then 600 ÷ 8 = 75, because 8 × 75 = 600 (or halve 600 three times: 300, 150, 75)."},
+  reflect:{prompt:"Explain how one array can show two multiplication facts and two division facts. Use 7 × 8 = 56.",starters:"\u201cThe array has … rows of …\u201d · \u201cDivision asks…\u201d"},
+  teacher:{goal:"Connect arrays, number facts, fact families and the area model.",duration:"10-min demo · 30–40-min lesson",prior:"Equal groups; place value; facts to 12×12",
+   demo:["Build 7 × 8. Rotate mentally: why is 8 × 7 the same total?","Toggle division groups: read all four facts from one array.","Split 23 × 4 into 20 × 4 and 3 × 4; connect to the standard algorithm."],
+   discuss:["How does one array show four number facts?","Why does splitting a factor work (distributive property)?","Which facts are automatic for you? Which need a strategy?"],
+   watch:["Division order confusion (56 ÷ 7 vs 7 ÷ 56).","Area-model parts not added back together.","Counting every square instead of using row structure."],
+   diff:["Beginner: facts to 6×6.","Standard: facts to 12×12; 2-digit × 1-digit area model.","Challenge: 2-digit × 2-digit; decimal tenths (Gr 6); squares/roots (Gr 8)."],extension:"Connect the area model to the standard algorithm; mental-math strategies for 24×25."}}
+];
+const MAP=[
+ ["Fractions","5","B1.3, B1.4","Represent equivalent fractions (halves–twelfths); compare fractions"],
+ ["Fractions","5","B2.5","Add/subtract fractions with like denominators"],
+ ["Fractions","6","B2.5","Add/subtract fractions with like and unlike denominators"],
+ ["Fractions","7","B1.4, B2.5","Simplify using equivalent fractions; add/subtract fractions"],
+ ["Fractions","8","B2.5, B2.8","Operate with fractions; use in proportional reasoning"],
+ ["Decimals & Percents","5","B1.5, B1.7","Decimals to hundredths; fraction/decimal/percent equivalence"],
+ ["Decimals & Percents","6","B2.3","Mental-math percents (1%, 5%, 10%, 15%, 25%, 50%)"],
+ ["Decimals & Percents","7","B1.7, B2.2, B2.3","Convert forms; common equivalents; increase/decrease by a percent"],
+ ["Decimals & Percents","8","B1.4","Flexible use incl. percents > 100% and < 1%"],
+ ["Integers","6","B1.2, B1.3","Represent, compare and order integers on number lines"],
+ ["Integers","7","B2.4","Add/subtract integers with diagrams and equations"],
+ ["Integers","8","B2.4, B2.7","Add/subtract and multiply/divide integers"],
+ ["Ratio & Proportion","5","B2.9","Create equivalent ratios and rates"],
+ ["Ratio & Proportion","6","B2.12","Solve ratio, percent and rate problems"],
+ ["Ratio & Proportion","7","B2.10","Proportional situations and reasoning"],
+ ["Ratio & Proportion","8","B2.8","Compare proportional situations; find unknown values"],
+ ["Multiply & Divide","5","B2.2, B2.6","Facts to 12×12 and related division; area model"],
+ ["Multiply & Divide","6","B2.7, B2.8","Multiply/divide by decimal tenths"],
+ ["Multiply & Divide","8","B2.2","Square numbers to 144 and square roots"]
+];
+function step(p,n,title){const h=el("h3",{},p);el("span",{class:"n","aria-hidden":"true"},h,String(n));h.appendChild(document.createTextNode(" "+title));}
+function buildTopicPanel(main,t){
+ const p=el("section",{class:"panel",id:"panel-"+t.id,role:"tabpanel","aria-labelledby":"tab-"+t.id,tabindex:"0"},main);
+ el("h2",{},p,t.name);
+ const chips=el("p",{class:"chips"},p);t.chips.forEach(function(c){el("span",{},chips,c);});
+ const obj=el("p",{class:"objective",id:"obj-"+t.id},p);
+ OBJ_UPDATERS.push(function(){obj.textContent="Grade "+GRADE+" focus: "+t.objectives[GRADE];});
+ step(p,1,"Learn");t.learn.forEach(function(x){el("p",{},p,x);});el("p",{class:"callout"},p,"Key idea: "+t.keyIdea);
+ step(p,2,"Explore");el("p",{class:"muted"},p,t.exploreHint);t.explore(el("div",{},p));
+ step(p,3,"Visualize — what to notice");const ul=el("ul",{},p);t.notice.forEach(function(x){el("li",{},ul,x);});
+ step(p,4,"Practise (5 questions, untimed)");buildPractice(el("div",{},p),t);
+ const ch=el("details",{},p);el("summary",{},ch,"Challenge task");el("p",{},ch,t.challenge.prompt);
+ const h1=el("details",{},ch);el("summary",{},h1,"Hint");el("p",{},h1,t.challenge.hint);
+ const h2=el("details",{},ch);el("summary",{},h2,"Worked answer — try it first!");el("p",{},h2,t.challenge.answer);
+ step(p,5,"Explain");el("p",{},p,t.explain.prompt);
+ const ex=el("details",{},p);el("summary",{},ex,"Model explanation");el("p",{},ex,t.explain.model);
+ step(p,6,"Reflect");el("p",{},p,t.reflect.prompt);
+ el("label",{class:"nl",for:t.id+"-ref"},p,"Your reflection (stays on this page — not saved or sent)");
+ el("textarea",{id:t.id+"-ref",rows:"3"},p);
+ el("p",{class:"muted"},p,"Sentence starters: "+t.reflect.starters);}
+function buildTeacherPanel(main){
+ const p=el("section",{class:"panel",id:"panel-teacher",role:"tabpanel","aria-labelledby":"tab-teacher",tabindex:"0"},main);
+ el("h2",{},p,"Teacher Guide & School Information");
+ el("p",{class:"muted"},p,"Free demonstration version for classroom evaluation. For school licensing, training and custom development, contact TM Bhinder via the Maths Lab Hub.");
+ const db=el("div",{class:"btnrow"},p);
+ el("button",{type:"button",class:"btn"},db,"Start guided school demo").addEventListener("click",startDemo);
+ el("span",{class:"muted"},db,"A 6-stop walkthrough for demonstrating to colleagues or school leaders.");
+ step(p,1,"The TM Bhinder Learning Cycle");
+ const ol=el("ol",{},p);
+ ["Learn — understand the concept and key idea.","Explore — change variables and experiment.","Visualize — notice the mathematical relationships.","Practise — apply independently with hints and feedback.","Explain — describe the reasoning in words.","Reflect — check understanding and surface misconceptions."].forEach(function(x){el("li",{},ol,x);});
+ el("p",{class:"muted"},p,"Tip: switch on Projector mode for whole-class display. Use the Grade and Level selectors (top of page) to match your class. Suggested 50-min demo: intro 5 · fractions 10 · percents 10 · integers/ratio 10 · practice + resources 10 · feedback 5.");
+ step(p,2,"Topic-by-topic teaching notes");
+ TOPICS.forEach(function(t){
+  const d=el("details",{},p);el("summary",{},d,t.name);
+  el("p",{},d,"Goal: "+t.teacher.goal);
+  el("p",{},d,"Suggested duration: "+t.teacher.duration+" · Prior knowledge: "+t.teacher.prior);
+  el("p",{},d,"Grade objectives:");const uo=el("ul",{},d);[5,6,7,8].forEach(function(g){el("li",{},uo,"Grade "+g+": "+t.objectives[g]);});
+  el("p",{},d,"Demo moves:");const u1=el("ul",{},d);t.teacher.demo.forEach(function(x){el("li",{},u1,x);});
+  el("p",{},d,"Questions to ask:");const u2=el("ul",{},d);t.teacher.discuss.forEach(function(x){el("li",{},u2,x);});
+  el("p",{},d,"Common misconceptions:");const u3=el("ul",{},d);t.teacher.watch.forEach(function(x){el("li",{},u3,x);});
+  el("p",{},d,"Differentiation:");const u4=el("ul",{},d);t.teacher.diff.forEach(function(x){el("li",{},u4,x);});
+  el("p",{},d,"Assessment: run the 5-question set at the chosen grade/level; use the Reflect prompt as an exit ticket.");
+  el("p",{},d,"Extension: "+t.teacher.extension);});
+ step(p,3,"Ontario curriculum mapping (2020, Strand B — Number)");
+ el("p",{class:"muted"},p,"Designed with reference to the Ontario Mathematics Curriculum (2020). Codes refer to the published curriculum; descriptions are paraphrases. Verify against the official curriculum before release. Not approved or endorsed by the Ministry of Education, any board, or any school.");
+ const tw=el("div",{class:"tw"},p);const table=el("table",{},tw);
+ const thead=el("thead",{},table);const hr=el("tr",{},thead);
+ ["Topic","Grade","Expectation","How this module supports it"].forEach(function(h){el("th",{},hr,h);});
+ const tb=el("tbody",{},table);MAP.forEach(function(r){const tr=el("tr",{},tb);r.forEach(function(c){el("td",{},tr,c);});});
+ el("p",{class:"muted"},p,"v1.1 scope: fraction bars model up to one whole; the percent grid covers 0–100% (percents beyond 100 appear in Grade 8 challenge questions).");
+ step(p,4,"Printable practice worksheet (10 questions)");
+ el("p",{class:"muted"},p,"Uses the Grade and Level selected at the top of the page.");
+ const wrow=el("div",{class:"ctl"},p);
+ const lsel=el("label",{class:"nl"},wrow,"Topic");const sel=el("select",{id:"ws-topic"},lsel);
+ el("option",{value:"all"},sel,"All topics (mixed)");TOPICS.forEach(function(t){el("option",{value:t.id},sel,t.name);});
+ const lkey=el("label",{class:"proj"},wrow);const key=el("input",{type:"checkbox",id:"ws-key"},lkey);lkey.appendChild(document.createTextNode(" Include answer key (teacher copy)"));
+ const wbtns=el("div",{class:"btnrow"},p);
+ el("button",{type:"button",class:"btn"},wbtns,"Generate worksheet").addEventListener("click",genWorksheet);
+ el("button",{type:"button",class:"btn sec"},wbtns,"Print").addEventListener("click",function(){if(document.getElementById("worksheet").hidden)genWorksheet();window.print();});
+ el("p",{class:"muted"},p,"The worksheet appears below and is the only thing that prints. The answer key prints on a separate page. Generate again for a fresh A/B version.");
+ step(p,5,"Privacy, accessibility & licence");
+ const ul=el("ul",{},p);
+ ["This application does not request student accounts or intentionally collect, transmit or retain answers. Hosted on GitHub Pages, which may process technical connection information under its own policies.",
+  "Scores and reflections exist only in this page\u2019s memory and disappear when the tab is closed or reloaded.",
+  "No timers. Learners can take as long as they need.",
+  "Keyboard: Tab / Shift+Tab moves between controls; arrow keys operate the topic tabs and sliders; Enter checks an answer; hints and worked answers are native disclosure controls.",
+  "Visual models carry text descriptions; feedback is announced to screen readers through live regions; tables scroll horizontally on small screens.",
+  "Built toward WCAG 2.2 AA. Keyboard and automated checks are done; full assistive-technology testing (e.g., NVDA), 200%/400% zoom and mobile testing are still pending — do not claim certification yet. Report barriers via the Maths Lab Hub.",
+  "Licence: free demonstration version for classroom evaluation. © 2026 TM Bhinder. Ask about school licensing, teacher packages, training and custom development."].forEach(function(x){el("li",{},ul,x);});
+ const wn=el("details",{},p);el("summary",{},wn,"What\u2019s new in v1.1");
+ const wu=el("ul",{},wn);
+ ["Grade (5–8) and Level (Beginner/Standard/Challenge) selectors drive grade-specific objectives and question difficulty.","Full 6-step TM Bhinder Learning Cycle: Learn, Explore, Visualize, Practise, Explain, Reflect.","Optional hint on every practice question; explanations for every answer.","Expanded teacher notes: objectives, duration, prior knowledge, differentiation, assessment, extension.","Guided school demo mode; integer division added to the number-line model.","Improved worksheet printing (grade/level header, working space, separate answer-key page).","Refined privacy wording (application vs hosting); accessibility improvements and honest testing status."].forEach(function(x){el("li",{},wu,x);});
+ const lic=el("details",{},p);el("summary",{},lic,"Licensing & packages (enquiries)");
+ el("p",{},lic,"This demo is free for classroom evaluation. Indicative packages to discuss (not a price list): Teacher resource packs; whole-school teacher-resource licences; teacher PD workshops; custom simulations. Contact TM Bhinder via the Maths Lab Hub to confirm scope, licensing and support.");}
+function genWorksheet(){
+ const topicSel=document.getElementById("ws-topic").value,withKey=document.getElementById("ws-key").checked;
+ const ws=document.getElementById("worksheet");ws.textContent="";ws.hidden=false;
+ const tname=topicSel==="all"?"Mixed (all five topics)":TOPICS.find(function(t){return t.id===topicSel;}).name;
+ const lvl=["","Beginner","Standard","Challenge"][LEVEL];
+ el("h2",{},ws,"TM Bhinder · Number Explorer — Practice Worksheet");
+ el("p",{},ws,"Grade "+GRADE+" · "+lvl+" · Topic: "+tname);
+ el("p",{},ws,"Name: ____________________ · Date: ____________");
+ const qs=[];for(let i=0;i<10;i++){const t=topicSel==="all"?TOPICS[i%TOPICS.length]:TOPICS.find(function(x){return x.id===topicSel;});qs.push(t.gen(GRADE,LEVEL));}
+ const list=el("ol",{},ws);
+ qs.forEach(function(q){const li=el("li",{class:"wq"},list);let text=q.prompt;
+  if(q.kind==="choice")text+="  ("+q.choices.map(function(c,j){return String.fromCharCode(97+j)+") "+c;}).join("   ")+")";
+  el("p",{class:"wqp"},li,text);el("p",{class:"wans"},li,"Answer: ____________________");el("div",{class:"wspace"},li);});
+ if(withKey){const key=el("div",{class:"answerkey"},ws);el("h3",{},key,"Answer Key (teacher copy)");
+  const kl=el("ol",{},key);qs.forEach(function(q){el("li",{},kl,q.display+" — "+q.explain);});}
+ el("p",{class:"wfoot"},ws,"© 2026 TM Bhinder · Free demonstration version · Designed with reference to the Ontario Mathematics Curriculum (2020). Not officially approved or endorsed.");
+ ws.scrollIntoView();}
+const TOUR=[
+ {tab:"fractions",text:"Stop 1 · Fractions: set A to 1/2, ask for a predicted equivalent fraction, then press \u201cMake B equivalent to A\u201d."},
+ {tab:"percents",text:"Stop 2 · Percents: slide to 50%, ask for the decimal and fraction before revealing; then try 7%."},
+ {tab:"integers",text:"Stop 3 · Integers: start at −3, add 5; predict the landing point, then read the arrow."},
+ {tab:"ratio",text:"Stop 4 · Ratio: build 2 : 3, read the equivalent-ratio table, test 4 : 6 as a proportion."},
+ {tab:"mult",text:"Stop 5 · Multiply & Divide: build 7 × 8, toggle division groups, read the fact family."},
+ {tab:"teacher",text:"Stop 6 · Teacher resources: generate a worksheet, show the answer key, review the curriculum map."}
+];
+let demoI=0,activateTab=null;
+function startDemo(){demoI=0;document.getElementById("demobar").hidden=false;document.body.classList.add("demoing");showDemo();}
+function showDemo(){const s=TOUR[demoI];if(activateTab)activateTab(s.tab);
+ document.getElementById("demo-text").textContent=s.text+"  ("+(demoI+1)+" of "+TOUR.length+")";
+ document.getElementById("demo-back").disabled=demoI===0;
+ document.getElementById("demo-next").textContent=demoI===TOUR.length-1?"Finish":"Next";
+ document.getElementById("demo-next").focus();}
+function endDemo(){document.getElementById("demobar").hidden=true;document.body.classList.remove("demoing");}
+function init(){
+ const main=document.getElementById("main");
+ TOPICS.forEach(buildTopicPanel.bind(null,main));
+ buildTeacherPanel(main);
+ const tabsEl=document.getElementById("tabs");
+ const all=TOPICS.map(function(t){return {id:t.id,name:t.name};});all.push({id:"teacher",name:"Teacher Guide"});
+ all.forEach(function(t){const b=el("button",{type:"button",role:"tab",id:"tab-"+t.id,"aria-controls":"panel-"+t.id,"aria-selected":"false",tabindex:"-1"},tabsEl,t.name);
+  b.addEventListener("click",function(){activate(t.id);});});
+ function activate(id){all.forEach(function(t){const sel=t.id===id,tab=document.getElementById("tab-"+t.id);
+  tab.setAttribute("aria-selected",sel?"true":"false");tab.tabIndex=sel?0:-1;document.getElementById("panel-"+t.id).hidden=!sel;});}
+ activateTab=activate;
+ tabsEl.addEventListener("keydown",function(e){
+  const ids=all.map(function(t){return t.id;});let i=ids.indexOf(document.activeElement.id.replace("tab-",""));if(i<0)return;
+  if(e.key==="ArrowRight")i=(i+1)%ids.length;else if(e.key==="ArrowLeft")i=(i-1+ids.length)%ids.length;
+  else if(e.key==="Home")i=0;else if(e.key==="End")i=ids.length-1;else return;
+  e.preventDefault();document.getElementById("tab-"+ids[i]).focus();activate(ids[i]);});
+ activate("fractions");
+ function applyGL(){OBJ_UPDATERS.forEach(function(f){f();});RESETS.forEach(function(f){f();});
+  document.getElementById("gl-ann").textContent="Grade "+GRADE+" · "+["","Beginner","Standard","Challenge"][LEVEL]+". Objectives and practice questions match this selection.";}
+ document.getElementById("sel-grade").addEventListener("change",function(e){GRADE=+e.target.value;applyGL();});
+ document.getElementById("sel-level").addEventListener("change",function(e){LEVEL=+e.target.value;applyGL();});
+ document.getElementById("projector").addEventListener("change",function(e){document.body.classList.toggle("projector",e.target.checked);});
+ document.getElementById("demo-next").addEventListener("click",function(){if(demoI>=TOUR.length-1)endDemo();else{demoI++;showDemo();}});
+ document.getElementById("demo-back").addEventListener("click",function(){if(demoI>0){demoI--;showDemo();}});
+ document.getElementById("demo-exit").addEventListener("click",endDemo);
+ applyGL();}
+if(typeof document!=="undefined"&&typeof window!=="undefined"){
+ try{if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();}
+ catch(err){var eb=document.createElement("div");eb.style.cssText="background:#fdecea;color:#b3261e;padding:16px;font-weight:700;text-align:center";
+  eb.textContent="Number Explorer failed to start: "+err.message+". Please report this via the Maths Lab Hub.";
+  document.body.insertBefore(eb,document.body.firstChild);}}
+</script>
 </body>
 </html>
